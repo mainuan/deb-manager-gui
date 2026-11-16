@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deb-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/selrahcsan/deb-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-16 11:15-0300\n"
+"POT-Creation-Date: 2026-11-16 12:39-0300\n"
 "PO-Revision-Date: 2026-11-16 11:15-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: zh_TW <https://github.com/mainuan>\n"
@@ -17,103 +17,103 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: deb-manager-gui:61
+#: deb-manager-gui:70
 #, python-brace-format
 msgid "File not found: {path}"
 msgstr "找不到檔案：{path}"
 
-#: deb-manager-gui:67
+#: deb-manager-gui:76
 #, python-brace-format
 msgid "Invalid mode: {mode}"
 msgstr "無效的模式：{mode}"
 
-#: deb-manager-gui:97
+#: deb-manager-gui:106
 #, python-brace-format
 msgid "Error fixing dependencies of {package}"
 msgstr "修復 {package} 的相依性時發生錯誤"
 
-#: deb-manager-gui:101
+#: deb-manager-gui:110
 #, python-brace-format
 msgid "Error processing: {package}"
 msgstr "處理時發生錯誤：{package}"
 
-#: deb-manager-gui:119
+#: deb-manager-gui:128
 msgid "Installing Packages"
 msgstr "正在安裝套件"
 
-#: deb-manager-gui:121
+#: deb-manager-gui:130
 msgid "Removing Packages"
 msgstr "正在移除套件"
 
-#: deb-manager-gui:129
+#: deb-manager-gui:138
 #, python-brace-format
 msgid "Installing: {packages}"
 msgstr "正在安裝：{packages}"
 
-#: deb-manager-gui:131
+#: deb-manager-gui:140
 #, python-brace-format
 msgid "Removing: {packages}"
 msgstr "正在移除：{packages}"
 
 #. Translators: {packages} is a comma-separated list of package names.
-#: deb-manager-gui:152
+#: deb-manager-gui:161
 #, python-brace-format
 msgid "{packages} installed successfully!"
 msgstr "已成功安裝 {packages}！"
 
 #. Translators: {packages} is a comma-separated list of package names.
-#: deb-manager-gui:155
+#: deb-manager-gui:164
 #, python-brace-format
 msgid "{packages} removed successfully!"
 msgstr "已成功移除 {packages}！"
 
-#: deb-manager-gui:156
+#: deb-manager-gui:165
 msgid "Success"
 msgstr "成功"
 
-#: deb-manager-gui:158
+#: deb-manager-gui:167
 msgid "Error"
 msgstr "錯誤"
 
-#: deb-manager-gui:158
+#: deb-manager-gui:167
 #, python-brace-format
 msgid "Failed: {message}"
 msgstr "失敗：{message}"
 
 #. Translators: placeholder names shown in the command-line usage text,
 #. e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
-#: deb-manager-gui:166
+#: deb-manager-gui:175
 msgid "package1"
 msgstr "套件1"
 
 #. Translators: see "package1".
-#: deb-manager-gui:168
+#: deb-manager-gui:177
 msgid "package2"
 msgstr "套件2"
 
 #. Translators: see "package1"; ".deb" is appended by the program.
-#: deb-manager-gui:170
+#: deb-manager-gui:179
 msgid "file1"
 msgstr "檔案1"
 
 #. Translators: see "file1".
-#: deb-manager-gui:172
+#: deb-manager-gui:181
 msgid "file2"
 msgstr "檔案2"
 
 #. Translators: placeholder in the usage text "[--tx custom message]".
-#: deb-manager-gui:174
+#: deb-manager-gui:183
 msgid "custom message"
 msgstr "自訂訊息"
 
-#: deb-manager-gui:175
+#: deb-manager-gui:184
 msgid "Usage:"
 msgstr "用法："
 
-#: deb-manager-gui:192
+#: deb-manager-gui:201
 msgid "Error: not enough arguments."
 msgstr "錯誤：參數不足。"
 
-#: deb-manager-gui:205
+#: deb-manager-gui:214
 msgid "Invalid option!"
 msgstr "無效的選項！"

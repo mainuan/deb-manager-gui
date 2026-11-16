@@ -49,6 +49,44 @@ out["boxes"] = shown
 print(json.dumps(out, ensure_ascii=False))
 '''
 
+# Runs the real main() with an empty Qt translations directory (no qtbase_<lang>.qm).
+DIRECTION_PROBE = r'''
+import json, sys, tempfile
+from importlib.machinery import SourceFileLoader
+import importlib.util
+from unittest import mock
+loader = SourceFileLoader("dmg", sys.argv[1])
+spec = importlib.util.spec_from_loader("dmg", loader)
+dmg = importlib.util.module_from_spec(spec)
+loader.exec_module(dmg)
+
+class FakeWorker:
+    def __init__(self, packages, mode): pass
+    class _Sig:
+        def connect(self, *a): pass
+    progress = _Sig(); finished = _Sig()
+    def start(self): pass
+
+dmg.AptWorker = FakeWorker
+out = {}
+
+def fake_exec(app):
+    out["direction"] = app.layoutDirection().name
+    out["window_rtl"] = [w.isRightToLeft() for w in app.topLevelWidgets() if isinstance(w, dmg.ManagerWindow)]
+    out["title"] = [w.windowTitle() for w in app.topLevelWidgets() if isinstance(w, dmg.ManagerWindow)]
+    return 0
+
+with tempfile.TemporaryDirectory() as empty, \
+        mock.patch.object(dmg.QLibraryInfo, "path", return_value=empty), \
+        mock.patch.object(dmg.QApplication, "exec", fake_exec), \
+        mock.patch.object(sys, "argv", ["deb-manager-gui", "--in", "htop"]):
+    try:
+        dmg.main()
+    except SystemExit:
+        pass
+print(json.dumps(out, ensure_ascii=False))
+'''
+
 
 class I18nTest(unittest.TestCase):
     @classmethod
@@ -112,6 +150,22 @@ class I18nTest(unittest.TestCase):
             self.assertEqual(self.usage(language),
                              "Usage:\n  --in <package1> [package2 ...]\n  --rm <package1> [package2 ...]\n"
                              "  --deb <file1.deb> [file2.deb ...]\n  [--tx custom message]\n")
+
+    def direction(self, language):
+        r = subprocess.run([sys.executable, "-c", DIRECTION_PROBE, SCRIPT], env=self.env(language),
+                           capture_output=True, text=True, check=True)
+        return json.loads(r.stdout.strip().splitlines()[-1])
+
+    def test_right_to_left_catalog_mirrors_without_qtbase(self):
+        # The application's Arabic catalog is used: mirrored even without qtbase_ar.
+        o = self.direction("ar")
+        self.assertEqual(o["direction"], "RightToLeft")
+        self.assertEqual(o["window_rtl"], [True])
+        # Urdu is right-to-left but has no application catalog: English, left to right.
+        o = self.direction("ur")
+        self.assertEqual(o["title"], ["Installing Packages"])
+        self.assertEqual(o["direction"], "LeftToRight")
+        self.assertEqual(o["window_rtl"], [False])
 
 
 if __name__ == "__main__":
