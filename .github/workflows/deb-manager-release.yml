@@ -22,6 +22,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Check translations (i18n)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext python3-pyqt6
+          po/i18n.sh check-pot
+          po/i18n.sh validate
+          QT_QPA_PLATFORM=offscreen python3 tests/test_i18n.py
+
       - name: Read and bump version
         id: version
         run: |
@@ -52,6 +60,9 @@ jobs:
           chmod +x deb-manager-gui
           cp deb-manager-gui deb-manager-pkg/usr/bin/
           chmod 755 deb-manager-pkg/usr/bin/deb-manager-gui
+
+          # Catálogos de tradução: /usr/share/locale/<lang>/LC_MESSAGES/deb-manager-gui.mo
+          po/i18n.sh compile deb-manager-pkg/usr/share/locale
 
           
           cat <<EOF > deb-manager-pkg/DEBIAN/control
