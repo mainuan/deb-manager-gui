@@ -54,6 +54,8 @@ cover/
 # Translations
 *.mo
 *.pot
+# o modelo de tradução é versionado (po/i18n.sh check-pot)
+!po/*.pot
 
 # Django stuff:
 *.log
