@@ -1,0 +1,123 @@
+# Italian translations for deb-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the deb-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: deb-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/selrahcsan/deb-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:15-0300\n"
+"PO-Revision-Date: 2026-11-16 11:15-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: it <https://github.com/mainuan>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: deb-manager-gui:61
+#, python-brace-format
+msgid "File not found: {path}"
+msgstr "File non trovato: {path}"
+
+#: deb-manager-gui:67
+#, python-brace-format
+msgid "Invalid mode: {mode}"
+msgstr "Modalità non valida: {mode}"
+
+#: deb-manager-gui:97
+#, python-brace-format
+msgid "Error fixing dependencies of {package}"
+msgstr "Errore durante la correzione delle dipendenze di {package}"
+
+#: deb-manager-gui:101
+#, python-brace-format
+msgid "Error processing: {package}"
+msgstr "Errore durante l'elaborazione: {package}"
+
+#: deb-manager-gui:119
+msgid "Installing Packages"
+msgstr "Installazione dei pacchetti"
+
+#: deb-manager-gui:121
+msgid "Removing Packages"
+msgstr "Rimozione dei pacchetti"
+
+# reviewed: 'Installazione di:' is ungrammatical before a colon
+#: deb-manager-gui:129
+#, python-brace-format
+msgid "Installing: {packages}"
+msgstr "Installazione in corso: {packages}"
+
+# reviewed: 'Rimozione di:' is ungrammatical before a colon
+#: deb-manager-gui:131
+#, python-brace-format
+msgid "Removing: {packages}"
+msgstr "Rimozione in corso: {packages}"
+
+#. Translators: {packages} is a comma-separated list of package names.
+#: deb-manager-gui:152
+#, python-brace-format
+msgid "{packages} installed successfully!"
+msgstr "{packages}: installazione completata correttamente."
+
+#. Translators: {packages} is a comma-separated list of package names.
+#: deb-manager-gui:155
+#, python-brace-format
+msgid "{packages} removed successfully!"
+msgstr "{packages}: rimozione completata correttamente."
+
+# from mainuan-grub-editor
+#: deb-manager-gui:156
+msgid "Success"
+msgstr "Successo"
+
+# from mainuan-grub-editor
+#: deb-manager-gui:158
+msgid "Error"
+msgstr "Errore"
+
+#: deb-manager-gui:158
+#, python-brace-format
+msgid "Failed: {message}"
+msgstr "Non riuscito: {message}"
+
+#. Translators: placeholder names shown in the command-line usage text,
+#. e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
+#: deb-manager-gui:166
+msgid "package1"
+msgstr "pacchetto1"
+
+#. Translators: see "package1".
+#: deb-manager-gui:168
+msgid "package2"
+msgstr "pacchetto2"
+
+#. Translators: see "package1"; ".deb" is appended by the program.
+#: deb-manager-gui:170
+msgid "file1"
+msgstr "file1"
+
+#. Translators: see "file1".
+#: deb-manager-gui:172
+msgid "file2"
+msgstr "file2"
+
+#. Translators: placeholder in the usage text "[--tx custom message]".
+#: deb-manager-gui:174
+msgid "custom message"
+msgstr "messaggio personalizzato"
+
+#: deb-manager-gui:175
+msgid "Usage:"
+msgstr "Uso:"
+
+#: deb-manager-gui:192
+msgid "Error: not enough arguments."
+msgstr "Errore: argomenti insufficienti."
+
+#: deb-manager-gui:205
+msgid "Invalid option!"
+msgstr "Opzione non valida."
