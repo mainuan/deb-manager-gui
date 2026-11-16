@@ -2,11 +2,33 @@
 
 import sys
 import subprocess
+import gettext
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QLabel, QProgressBar, QMessageBox
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtCore import (
+    Qt, QThread, pyqtSignal, QTranslator, QLocale, QLibraryInfo
+)
 import os
+
+# i18n: domínio gettext = nome do pacote Debian. Os catálogos instalados ficam
+# em /usr/share/locale; para rodar a partir do código-fonte, defina
+# DEB_MANAGER_GUI_LOCALEDIR ou compile em ./build/locale (po/i18n.sh compile).
+TEXTDOMAIN = "deb-manager-gui"
+
+
+def _find_localedir():
+    env_dir = os.environ.get("DEB_MANAGER_GUI_LOCALEDIR")
+    if env_dir:
+        return env_dir
+    local = os.path.join(os.path.dirname(os.path.realpath(__file__)), "build", "locale")
+    if os.path.isdir(local):
+        return local
+    return None  # padrão do Python: /usr/share/locale
+
+
+_translation = gettext.translation(TEXTDOMAIN, _find_localedir(), fallback=True)
+_ = _translation.gettext
 
 
 class AptWorker(QThread):
@@ -27,6 +49,8 @@ class AptWorker(QThread):
             for pkg in self.packages:
                 if self.mode == "install":
                     cmd = ['sudo', 'apt', 'install', '-y', pkg]
+                    # Palavra procurada na saída do apt (análise, não interface):
+                    # não traduzir.
                     action_word = "Instalando"
                 elif self.mode == "remove":
                     cmd = ['sudo', 'apt', 'remove', '-y', pkg]
@@ -34,13 +58,13 @@ class AptWorker(QThread):
                 elif self.mode == "deb_install":
                     # Instalação local de .deb
                     if not os.path.isfile(pkg):
-                        self.finished.emit(False, f"Arquivo não encontrado: {pkg}")
+                        self.finished.emit(False, _("File not found: {path}").format(path=pkg))
                         return
 
                     cmd = ['sudo', 'dpkg', '-i', pkg]
                     action_word = "Instalando .deb"
                 else:
-                    self.finished.emit(False, f"Modo inválido: {self.mode}")
+                    self.finished.emit(False, _("Invalid mode: {mode}").format(mode=self.mode))
                     return
 
                 self.progress.emit(current_progress)
@@ -68,11 +92,13 @@ class AptWorker(QThread):
                 if self.mode == "deb_install" and process.returncode != 0:
                     fix = subprocess.run(['sudo', 'apt', '-f', 'install', '-y'])
                     if fix.returncode != 0:
-                        self.finished.emit(False, f"Erro ao corrigir dependências de {pkg}")
+                        self.finished.emit(
+                            False,
+                            _("Error fixing dependencies of {package}").format(package=pkg))
                         return
 
                 if process.returncode != 0:
-                    self.finished.emit(False, f"Erro ao processar: {pkg}")
+                    self.finished.emit(False, _("Error processing: {package}").format(package=pkg))
                     return
 
                 current_progress += progress_step
@@ -88,13 +114,21 @@ class ManagerWindow(QWidget):
     def __init__(self, packages, mode, custom_text=None):
         super().__init__()
         self.mode = mode
-        action = "Instalando" if mode in ["install", "deb_install"] else "Removendo"
-        self.setWindowTitle(f"{action} Pacotes")
+        installing = mode in ["install", "deb_install"]
+        if installing:
+            self.setWindowTitle(_("Installing Packages"))
+        else:
+            self.setWindowTitle(_("Removing Packages"))
         self.setFixedSize(460, 180)
 
         layout = QVBoxLayout()
 
-        label_text = custom_text if custom_text else f"{action}: {', '.join(packages)}"
+        if custom_text:
+            label_text = custom_text
+        elif installing:
+            label_text = _("Installing: {packages}").format(packages=", ".join(packages))
+        else:
+            label_text = _("Removing: {packages}").format(packages=", ".join(packages))
 
         self.label = QLabel(label_text)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -112,21 +146,37 @@ class ManagerWindow(QWidget):
         self.worker.start()
 
     def on_finished(self, success, message):
-        action = "instalados" if self.mode in ["install", "deb_install"] else "removidos"
         if success:
-            QMessageBox.information(self, "Sucesso", f"{message} {action} com sucesso!")
+            if self.mode in ["install", "deb_install"]:
+                # Translators: {packages} is a comma-separated list of package names.
+                text = _("{packages} installed successfully!").format(packages=message)
+            else:
+                # Translators: {packages} is a comma-separated list of package names.
+                text = _("{packages} removed successfully!").format(packages=message)
+            QMessageBox.information(self, _("Success"), text)
         else:
-            QMessageBox.critical(self, "Erro", f"Falha: {message}")
+            QMessageBox.critical(self, _("Error"), _("Failed: {message}").format(message=message))
         self.close()
 
 
 def main():
     if len(sys.argv) < 3:
-        print("Uso:")
-        print("  --in <pacote1> [pacote2 ...]")
-        print("  --rm <pacote1> [pacote2 ...]")
-        print("  --deb <arquivo1.deb> [arquivo2.deb ...]")
-        print("  [--tx mensagem personalizada]")
+        # Translators: placeholder names shown in the command-line usage text,
+        # e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
+        package1 = _("package1")
+        # Translators: see "package1".
+        package2 = _("package2")
+        # Translators: see "package1"; ".deb" is appended by the program.
+        file1 = _("file1")
+        # Translators: see "file1".
+        file2 = _("file2")
+        # Translators: placeholder in the usage text "[--tx custom message]".
+        custom_message = _("custom message")
+        print(_("Usage:"))
+        print(f"  --in <{package1}> [{package2} ...]")
+        print(f"  --rm <{package1}> [{package2} ...]")
+        print(f"  --deb <{file1}.deb> [{file2}.deb ...]")
+        print(f"  [--tx {custom_message}]")
         sys.exit(1)
 
     # Detecta --tx
@@ -139,7 +189,7 @@ def main():
         args = sys.argv[1:]
 
     if len(args) < 2:
-        print("Erro: argumentos insuficientes.")
+        print(_("Error: not enough arguments."))
         sys.exit(1)
 
     option = args[0]
@@ -152,10 +202,15 @@ def main():
     elif option == '--deb':
         mode = "deb_install"
     else:
-        print("Opção inválida!")
+        print(_("Invalid option!"))
         sys.exit(1)
 
     app = QApplication(sys.argv)
+    # Botões padrão do Qt (QMessageBox) no idioma do sistema, nunca fixo.
+    qt_translator = QTranslator(app)
+    if qt_translator.load(QLocale.system(), "qtbase", "_",
+                          QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)):
+        app.installTranslator(qt_translator)
     window = ManagerWindow(packages, mode, custom_text)
     window.show()
     sys.exit(app.exec())
