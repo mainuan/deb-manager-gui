@@ -1,0 +1,32 @@
+Source: deb-manager-gui
+Section: admin
+Priority: optional
+Maintainer: Charles Santana <charlesstna@proton.me>
+Build-Depends: debhelper-compat (= 13),
+               gettext,
+               python3,
+               python3-pyqt6
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/mainuan/deb-manager-gui
+Vcs-Browser: https://github.com/mainuan/deb-manager-gui
+Vcs-Git: https://github.com/mainuan/deb-manager-gui.git
+
+Package: deb-manager-gui
+Architecture: all
+Depends: ${misc:Depends},
+         apt,
+         python3,
+         python3-pyqt6
+Recommends: pkexec,
+            sudo
+Description: graphical progress window for APT package operations
+ deb-manager-gui installs or removes APT packages and local .deb files
+ while showing a Qt 6 progress window, followed by a success or error
+ message. It is meant to be started by other programs, usually through
+ pkexec, with the package list on the command line:
+ .
+   deb-manager-gui --in|--rm|--deb <package...> [--tx <message>]
+ .
+ The interface follows the language of the KDE Plasma session, also when
+ started through pkexec.

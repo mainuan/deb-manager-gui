@@ -1,0 +1,119 @@
+# Dutch translations for deb-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the deb-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: deb-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/selrahcsan/deb-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-17 10:49-0300\n"
+"PO-Revision-Date: 2026-11-16 12:39-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: nl <https://github.com/mainuan>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: deb-manager-gui:161
+#, python-brace-format
+msgid "File not found: {path}"
+msgstr "Bestand niet gevonden: {path}"
+
+#: deb-manager-gui:166
+#, python-brace-format
+msgid "Invalid mode: {mode}"
+msgstr "Ongeldige modus: {mode}"
+
+#: deb-manager-gui:189
+#, python-brace-format
+msgid "Error fixing dependencies of {package}"
+msgstr "Fout bij het repareren van de afhankelijkheden van {package}"
+
+#: deb-manager-gui:193
+#, python-brace-format
+msgid "Error processing: {package}"
+msgstr "Fout bij het verwerken van: {package}"
+
+#: deb-manager-gui:211
+msgid "Installing Packages"
+msgstr "Pakketten installeren"
+
+#: deb-manager-gui:213
+msgid "Removing Packages"
+msgstr "Pakketten verwijderen"
+
+#: deb-manager-gui:221
+#, python-brace-format
+msgid "Installing: {packages}"
+msgstr "Installeren: {packages}"
+
+#: deb-manager-gui:223
+#, python-brace-format
+msgid "Removing: {packages}"
+msgstr "Verwijderen: {packages}"
+
+#. Translators: {packages} is a comma-separated list of package names.
+#: deb-manager-gui:244
+#, python-brace-format
+msgid "{packages} installed successfully!"
+msgstr "{packages} met succes geïnstalleerd!"
+
+#. Translators: {packages} is a comma-separated list of package names.
+#: deb-manager-gui:247
+#, python-brace-format
+msgid "{packages} removed successfully!"
+msgstr "{packages} met succes verwijderd!"
+
+#: deb-manager-gui:248
+msgid "Success"
+msgstr "Succes"
+
+#: deb-manager-gui:250
+msgid "Error"
+msgstr "Fout"
+
+#: deb-manager-gui:250
+#, python-brace-format
+msgid "Failed: {message}"
+msgstr "Mislukt: {message}"
+
+#. Translators: placeholder names shown in the command-line usage text,
+#. e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
+#: deb-manager-gui:258
+msgid "package1"
+msgstr "pakket1"
+
+#. Translators: see "package1".
+#: deb-manager-gui:260
+msgid "package2"
+msgstr "pakket2"
+
+#. Translators: see "package1"; ".deb" is appended by the program.
+#: deb-manager-gui:262
+msgid "file1"
+msgstr "bestand1"
+
+#. Translators: see "file1".
+#: deb-manager-gui:264
+msgid "file2"
+msgstr "bestand2"
+
+#. Translators: placeholder in the usage text "[--tx custom message]".
+#: deb-manager-gui:266
+msgid "custom message"
+msgstr "eigen bericht"
+
+#: deb-manager-gui:267
+msgid "Usage:"
+msgstr "Gebruik:"
+
+#: deb-manager-gui:284
+msgid "Error: not enough arguments."
+msgstr "Fout: niet genoeg argumenten."
+
+#: deb-manager-gui:297
+msgid "Invalid option!"
+msgstr "Ongeldige optie!"

@@ -2,11 +2,137 @@
 
 import sys
 import subprocess
+import gettext
+import configparser
+import pwd
+import re
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QLabel, QProgressBar, QMessageBox
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtCore import (
+    Qt, QThread, pyqtSignal, QTranslator, QLocale, QLibraryInfo
+)
 import os
+
+# i18n: domínio gettext = nome do pacote Debian. Os catálogos instalados ficam
+# em /usr/share/locale; para rodar a partir do código-fonte, defina
+# DEB_MANAGER_GUI_LOCALEDIR ou compile em ./build/locale (po/i18n.sh compile).
+TEXTDOMAIN = "deb-manager-gui"
+
+_LANGUAGE_VARIABLES = ("LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG")
+_SAFE_LOCALE_VALUE = re.compile(r"[A-Za-z0-9_.@:-]{1,128}")
+
+
+def _read_ini_value(path, section, key):
+    parser = configparser.ConfigParser(strict=False, interpolation=None)
+    parser.optionxform = str
+    try:
+        parser.read(path, encoding="utf-8")
+        value = parser.get(section, key, fallback="").strip()
+    except (configparser.Error, OSError, UnicodeDecodeError):
+        return ""
+    return value if _SAFE_LOCALE_VALUE.fullmatch(value) else ""
+
+
+def _inherit_caller_language(environ=os.environ, etc_default_locale="/etc/default/locale"):
+    """pkexec clears the environment, so a program started as
+    'pkexec deb-manager-gui …' would always show English. When no language
+    variable survived, use the language the calling user chose in Plasma
+    (~/.config/plasma-localerc), then the system default locale."""
+    if "PKEXEC_UID" not in environ or any(environ.get(name) for name in _LANGUAGE_VARIABLES):
+        return
+    try:
+        home = pwd.getpwuid(int(environ["PKEXEC_UID"])).pw_dir
+    except (KeyError, ValueError):
+        home = ""
+    if home:
+        localerc = os.path.join(home, ".config", "plasma-localerc")
+        language = _read_ini_value(localerc, "Translations", "LANGUAGE")
+        lang = _read_ini_value(localerc, "Formats", "LANG")
+        if language:
+            environ["LANGUAGE"] = language
+        if lang:
+            environ["LANG"] = lang
+        if language or lang:
+            return
+    try:
+        with open(etc_default_locale, encoding="utf-8") as handle:
+            for line in handle:
+                name, _sep, value = line.strip().partition("=")
+                value = value.strip().strip('"')
+                if name in ("LANG", "LANGUAGE") and _SAFE_LOCALE_VALUE.fullmatch(value):
+                    environ[name] = value
+    except (OSError, UnicodeDecodeError):
+        pass
+
+
+_inherit_caller_language()
+
+
+def _find_localedir():
+    env_dir = os.environ.get("DEB_MANAGER_GUI_LOCALEDIR")
+    if env_dir:
+        return env_dir
+    local = os.path.join(os.path.dirname(os.path.realpath(__file__)), "build", "locale")
+    if os.path.isdir(local):
+        return local
+    return None  # padrão do Python: /usr/share/locale
+
+
+_translation = gettext.translation(TEXTDOMAIN, _find_localedir(), fallback=True)
+_ = _translation.gettext
+
+
+def apply_catalog_layout_direction(app):
+    """Qt mirrors only when qtbase_<lang> says so (Urdu has none; qtbase may be
+    missing): follow the direction of the application catalog in use. Without a
+    catalog the interface is English and the direction is left untouched."""
+    language = _translation.info().get("language")
+    if language and QLocale(language).textDirection() == Qt.LayoutDirection.RightToLeft:
+        app.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
+
+
+# apt/dpkg run with a fixed English locale: the progress markers below are
+# matched against their output, whatever the language of the interface.
+_PROGRESS_MARKERS = (
+    ("Reading package lists", 10),
+    ("Building dependency tree", 20),
+    ("Reading state information", 30),
+    ("Unpacking ", 60),
+    ("Removing ", 60),
+    ("Setting up ", 90),
+    ("Processing triggers", 95),
+)
+
+
+def _progress_marker(line):
+    """Progress percentage (within one package) suggested by an apt/dpkg line."""
+    for marker, value in _PROGRESS_MARKERS:
+        if marker in line:
+            return value
+    return 0
+
+
+def _package_tool_environment(environ=None):
+    """Environment for apt-get/dpkg: C.UTF-8 messages and no interactive prompt
+    (there is no terminal behind the window; keep existing configuration files)."""
+    env = dict(os.environ if environ is None else environ)
+    for name in ("LANGUAGE", "LC_ALL", "LC_MESSAGES"):
+        env.pop(name, None)
+    env["LC_ALL"] = "C.UTF-8"
+    env["DEBIAN_FRONTEND"] = "noninteractive"
+    return env
+
+
+def _privileged(cmd, euid=None):
+    """apt-get/dpkg command line: direct when already root (pkexec), via sudo otherwise."""
+    euid = os.geteuid() if euid is None else euid
+    tool = list(cmd)
+    if tool[0] in ("apt-get",):
+        tool[1:1] = ["-o", "Dpkg::Options::=--force-confdef", "-o", "Dpkg::Options::=--force-confold"]
+    elif tool[0] == "dpkg":
+        tool[1:1] = ["--force-confdef", "--force-confold"]
+    return tool if euid == 0 else ["sudo"] + tool
 
 
 class AptWorker(QThread):
@@ -21,58 +147,50 @@ class AptWorker(QThread):
     def run(self):
         try:
             total = len(self.packages)
-            progress_step = 100 // total
-            current_progress = 0
+            progress_step = 100 / total
+            current_progress = 0.0
 
             for pkg in self.packages:
                 if self.mode == "install":
-                    cmd = ['sudo', 'apt', 'install', '-y', pkg]
-                    action_word = "Instalando"
+                    cmd = ['apt-get', 'install', '-y', pkg]
                 elif self.mode == "remove":
-                    cmd = ['sudo', 'apt', 'remove', '-y', pkg]
-                    action_word = "Removendo"
+                    cmd = ['apt-get', 'remove', '-y', pkg]
                 elif self.mode == "deb_install":
                     # Instalação local de .deb
                     if not os.path.isfile(pkg):
-                        self.finished.emit(False, f"Arquivo não encontrado: {pkg}")
+                        self.finished.emit(False, _("File not found: {path}").format(path=pkg))
                         return
 
-                    cmd = ['sudo', 'dpkg', '-i', pkg]
-                    action_word = "Instalando .deb"
+                    cmd = ['dpkg', '-i', pkg]
                 else:
-                    self.finished.emit(False, f"Modo inválido: {self.mode}")
+                    self.finished.emit(False, _("Invalid mode: {mode}").format(mode=self.mode))
                     return
 
-                self.progress.emit(current_progress)
-                process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+                self.progress.emit(int(current_progress))
+                process = subprocess.Popen(_privileged(cmd), stdout=subprocess.PIPE,
+                                           stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                           text=True, env=_package_tool_environment())
 
+                reached = 0
                 for line in process.stdout:
                     print(line.strip())
-                    step = 0
-                    if "Lendo listas" in line:
-                        step = 10
-                    elif "Construindo árvore" in line:
-                        step = 20
-                    elif "Lendo informação" in line:
-                        step = 30
-                    elif action_word in line:
-                        step = 60
-                    elif "Configurando" in line or "Removido" in line:
-                        step = 90
-
-                    self.progress.emit(min(current_progress + int(step * progress_step / 100), 100))
+                    reached = max(reached, _progress_marker(line))
+                    self.progress.emit(min(int(current_progress + reached * progress_step / 100), 100))
 
                 process.wait()
 
                 # Corrigir dependências pendentes no caso de .deb
                 if self.mode == "deb_install" and process.returncode != 0:
-                    fix = subprocess.run(['sudo', 'apt', '-f', 'install', '-y'])
+                    fix = subprocess.run(_privileged(['apt-get', '-f', 'install', '-y']),
+                                         stdin=subprocess.DEVNULL, env=_package_tool_environment())
                     if fix.returncode != 0:
-                        self.finished.emit(False, f"Erro ao corrigir dependências de {pkg}")
+                        self.finished.emit(
+                            False,
+                            _("Error fixing dependencies of {package}").format(package=pkg))
                         return
 
                 if process.returncode != 0:
-                    self.finished.emit(False, f"Erro ao processar: {pkg}")
+                    self.finished.emit(False, _("Error processing: {package}").format(package=pkg))
                     return
 
                 current_progress += progress_step
@@ -88,13 +206,21 @@ class ManagerWindow(QWidget):
     def __init__(self, packages, mode, custom_text=None):
         super().__init__()
         self.mode = mode
-        action = "Instalando" if mode in ["install", "deb_install"] else "Removendo"
-        self.setWindowTitle(f"{action} Pacotes")
+        installing = mode in ["install", "deb_install"]
+        if installing:
+            self.setWindowTitle(_("Installing Packages"))
+        else:
+            self.setWindowTitle(_("Removing Packages"))
         self.setFixedSize(460, 180)
 
         layout = QVBoxLayout()
 
-        label_text = custom_text if custom_text else f"{action}: {', '.join(packages)}"
+        if custom_text:
+            label_text = custom_text
+        elif installing:
+            label_text = _("Installing: {packages}").format(packages=", ".join(packages))
+        else:
+            label_text = _("Removing: {packages}").format(packages=", ".join(packages))
 
         self.label = QLabel(label_text)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -112,21 +238,37 @@ class ManagerWindow(QWidget):
         self.worker.start()
 
     def on_finished(self, success, message):
-        action = "instalados" if self.mode in ["install", "deb_install"] else "removidos"
         if success:
-            QMessageBox.information(self, "Sucesso", f"{message} {action} com sucesso!")
+            if self.mode in ["install", "deb_install"]:
+                # Translators: {packages} is a comma-separated list of package names.
+                text = _("{packages} installed successfully!").format(packages=message)
+            else:
+                # Translators: {packages} is a comma-separated list of package names.
+                text = _("{packages} removed successfully!").format(packages=message)
+            QMessageBox.information(self, _("Success"), text)
         else:
-            QMessageBox.critical(self, "Erro", f"Falha: {message}")
+            QMessageBox.critical(self, _("Error"), _("Failed: {message}").format(message=message))
         self.close()
 
 
 def main():
     if len(sys.argv) < 3:
-        print("Uso:")
-        print("  --in <pacote1> [pacote2 ...]")
-        print("  --rm <pacote1> [pacote2 ...]")
-        print("  --deb <arquivo1.deb> [arquivo2.deb ...]")
-        print("  [--tx mensagem personalizada]")
+        # Translators: placeholder names shown in the command-line usage text,
+        # e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
+        package1 = _("package1")
+        # Translators: see "package1".
+        package2 = _("package2")
+        # Translators: see "package1"; ".deb" is appended by the program.
+        file1 = _("file1")
+        # Translators: see "file1".
+        file2 = _("file2")
+        # Translators: placeholder in the usage text "[--tx custom message]".
+        custom_message = _("custom message")
+        print(_("Usage:"))
+        print(f"  --in <{package1}> [{package2} ...]")
+        print(f"  --rm <{package1}> [{package2} ...]")
+        print(f"  --deb <{file1}.deb> [{file2}.deb ...]")
+        print(f"  [--tx {custom_message}]")
         sys.exit(1)
 
     # Detecta --tx
@@ -139,7 +281,7 @@ def main():
         args = sys.argv[1:]
 
     if len(args) < 2:
-        print("Erro: argumentos insuficientes.")
+        print(_("Error: not enough arguments."))
         sys.exit(1)
 
     option = args[0]
@@ -152,10 +294,16 @@ def main():
     elif option == '--deb':
         mode = "deb_install"
     else:
-        print("Opção inválida!")
+        print(_("Invalid option!"))
         sys.exit(1)
 
     app = QApplication(sys.argv)
+    # Botões padrão do Qt (QMessageBox) no idioma do sistema, nunca fixo.
+    qt_translator = QTranslator(app)
+    if qt_translator.load(QLocale.system(), "qtbase", "_",
+                          QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)):
+        app.installTranslator(qt_translator)
+    apply_catalog_layout_direction(app)
     window = ManagerWindow(packages, mode, custom_text)
     window.show()
     sys.exit(app.exec())

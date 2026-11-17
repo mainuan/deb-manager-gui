@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v[0-9]*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+
+jobs:
+  package:
+    permissions:
+      contents: write # only the release job uses it, and only for v* tags
+    uses: mainuan/.github/.github/workflows/debian-package.yml@2409a50535befe90ac3bbfc4db6eed7d65eac4e5
+    with:
+      package: deb-manager-gui
+      release-title: deb-manager-gui
+      test-command: po/i18n.sh check-pot && po/i18n.sh validate
+      smoke-command: |
+        out="$(LANGUAGE=pt_BR deb-manager-gui 2>&1 || true)"
+        echo "$out"
+        grep -q '^Uso:' <<<"$out"
+        out="$(LANGUAGE=en deb-manager-gui 2>&1 || true)"
+        grep -q '^Usage:' <<<"$out"
+        test -f /usr/share/locale/ar/LC_MESSAGES/deb-manager-gui.mo
