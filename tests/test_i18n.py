@@ -161,8 +161,12 @@ class I18nTest(unittest.TestCase):
         o = self.direction("ar")
         self.assertEqual(o["direction"], "RightToLeft")
         self.assertEqual(o["window_rtl"], [True])
-        # Urdu is right-to-left but has no application catalog: English, left to right.
+        # Urdu has an application catalog but no qtbase_ur: mirrored by the catalog.
         o = self.direction("ur")
+        self.assertEqual(o["direction"], "RightToLeft")
+        self.assertEqual(o["window_rtl"], [True])
+        # Yiddish is right-to-left but has no application catalog: English, left to right.
+        o = self.direction("yi")
         self.assertEqual(o["title"], ["Installing Packages"])
         self.assertEqual(o["direction"], "LeftToRight")
         self.assertEqual(o["window_rtl"], [False])

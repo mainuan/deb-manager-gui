@@ -1,0 +1,120 @@
+# Ukrainian translations for deb-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the deb-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: deb-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/selrahcsan/deb-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 12:39-0300\n"
+"PO-Revision-Date: 2026-11-16 12:39-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: uk <https://github.com/mainuan>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : "
+"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#: deb-manager-gui:70
+#, python-brace-format
+msgid "File not found: {path}"
+msgstr "Файл не знайдено: {path}"
+
+#: deb-manager-gui:76
+#, python-brace-format
+msgid "Invalid mode: {mode}"
+msgstr "Некоректний режим: {mode}"
+
+#: deb-manager-gui:106
+#, python-brace-format
+msgid "Error fixing dependencies of {package}"
+msgstr "Помилка під час виправлення залежностей {package}"
+
+#: deb-manager-gui:110
+#, python-brace-format
+msgid "Error processing: {package}"
+msgstr "Помилка обробки: {package}"
+
+#: deb-manager-gui:128
+msgid "Installing Packages"
+msgstr "Встановлення пакунків"
+
+#: deb-manager-gui:130
+msgid "Removing Packages"
+msgstr "Вилучення пакунків"
+
+#: deb-manager-gui:138
+#, python-brace-format
+msgid "Installing: {packages}"
+msgstr "Встановлення: {packages}"
+
+#: deb-manager-gui:140
+#, python-brace-format
+msgid "Removing: {packages}"
+msgstr "Вилучення: {packages}"
+
+#. Translators: {packages} is a comma-separated list of package names.
+#: deb-manager-gui:161
+#, python-brace-format
+msgid "{packages} installed successfully!"
+msgstr "{packages}: успішно встановлено!"
+
+#. Translators: {packages} is a comma-separated list of package names.
+#: deb-manager-gui:164
+#, python-brace-format
+msgid "{packages} removed successfully!"
+msgstr "{packages}: успішно вилучено!"
+
+#: deb-manager-gui:165
+msgid "Success"
+msgstr "Завершено"
+
+#: deb-manager-gui:167
+msgid "Error"
+msgstr "Помилка"
+
+#: deb-manager-gui:167
+#, python-brace-format
+msgid "Failed: {message}"
+msgstr "Помилка: {message}"
+
+#. Translators: placeholder names shown in the command-line usage text,
+#. e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
+#: deb-manager-gui:175
+msgid "package1"
+msgstr "пакунок1"
+
+#. Translators: see "package1".
+#: deb-manager-gui:177
+msgid "package2"
+msgstr "пакунок2"
+
+#. Translators: see "package1"; ".deb" is appended by the program.
+#: deb-manager-gui:179
+msgid "file1"
+msgstr "файл1"
+
+#. Translators: see "file1".
+#: deb-manager-gui:181
+msgid "file2"
+msgstr "файл2"
+
+#. Translators: placeholder in the usage text "[--tx custom message]".
+#: deb-manager-gui:183
+msgid "custom message"
+msgstr "власне_повідомлення"
+
+#: deb-manager-gui:184
+msgid "Usage:"
+msgstr "Користування:"
+
+#: deb-manager-gui:201
+msgid "Error: not enough arguments."
+msgstr "Помилка: недостатньо аргументів."
+
+#: deb-manager-gui:214
+msgid "Invalid option!"
+msgstr "Некоректний параметр!"
