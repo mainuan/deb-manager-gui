@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deb-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/selrahcsan/deb-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-17 04:07-0300\n"
+"POT-Creation-Date: 2026-11-17 10:49-0300\n"
 "PO-Revision-Date: 2026-11-16 12:39-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: hu <https://github.com/mainuan>\n"
@@ -17,103 +17,103 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: deb-manager-gui:122
+#: deb-manager-gui:161
 #, python-brace-format
 msgid "File not found: {path}"
 msgstr "A fájl nem található: {path}"
 
-#: deb-manager-gui:128
+#: deb-manager-gui:166
 #, python-brace-format
 msgid "Invalid mode: {mode}"
 msgstr "Érvénytelen mód: {mode}"
 
-#: deb-manager-gui:158
+#: deb-manager-gui:189
 #, python-brace-format
 msgid "Error fixing dependencies of {package}"
 msgstr "Hiba a függőségek javításakor: {package}"
 
-#: deb-manager-gui:162
+#: deb-manager-gui:193
 #, python-brace-format
 msgid "Error processing: {package}"
 msgstr "Hiba a feldolgozáskor: {package}"
 
-#: deb-manager-gui:180
+#: deb-manager-gui:211
 msgid "Installing Packages"
 msgstr "Csomagok telepítése"
 
-#: deb-manager-gui:182
+#: deb-manager-gui:213
 msgid "Removing Packages"
 msgstr "Csomagok eltávolítása"
 
-#: deb-manager-gui:190
+#: deb-manager-gui:221
 #, python-brace-format
 msgid "Installing: {packages}"
 msgstr "Telepítés: {packages}"
 
-#: deb-manager-gui:192
+#: deb-manager-gui:223
 #, python-brace-format
 msgid "Removing: {packages}"
 msgstr "Eltávolítás: {packages}"
 
 #. Translators: {packages} is a comma-separated list of package names.
-#: deb-manager-gui:213
+#: deb-manager-gui:244
 #, python-brace-format
 msgid "{packages} installed successfully!"
 msgstr "Sikeresen telepítve: {packages}"
 
 #. Translators: {packages} is a comma-separated list of package names.
-#: deb-manager-gui:216
+#: deb-manager-gui:247
 #, python-brace-format
 msgid "{packages} removed successfully!"
 msgstr "Sikeresen eltávolítva: {packages}"
 
-#: deb-manager-gui:217
+#: deb-manager-gui:248
 msgid "Success"
 msgstr "Siker"
 
-#: deb-manager-gui:219
+#: deb-manager-gui:250
 msgid "Error"
 msgstr "Hiba"
 
-#: deb-manager-gui:219
+#: deb-manager-gui:250
 #, python-brace-format
 msgid "Failed: {message}"
 msgstr "Sikertelen: {message}"
 
 #. Translators: placeholder names shown in the command-line usage text,
 #. e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
-#: deb-manager-gui:227
+#: deb-manager-gui:258
 msgid "package1"
 msgstr "csomag1"
 
 #. Translators: see "package1".
-#: deb-manager-gui:229
+#: deb-manager-gui:260
 msgid "package2"
 msgstr "csomag2"
 
 #. Translators: see "package1"; ".deb" is appended by the program.
-#: deb-manager-gui:231
+#: deb-manager-gui:262
 msgid "file1"
 msgstr "fájl1"
 
 #. Translators: see "file1".
-#: deb-manager-gui:233
+#: deb-manager-gui:264
 msgid "file2"
 msgstr "fájl2"
 
 #. Translators: placeholder in the usage text "[--tx custom message]".
-#: deb-manager-gui:235
+#: deb-manager-gui:266
 msgid "custom message"
 msgstr "egyéni üzenet"
 
-#: deb-manager-gui:236
+#: deb-manager-gui:267
 msgid "Usage:"
 msgstr "Használat:"
 
-#: deb-manager-gui:253
+#: deb-manager-gui:284
 msgid "Error: not enough arguments."
 msgstr "Hiba: nincs elég argumentum."
 
-#: deb-manager-gui:266
+#: deb-manager-gui:297
 msgid "Invalid option!"
 msgstr "Érvénytelen kapcsoló!"

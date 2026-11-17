@@ -1,0 +1,11 @@
+deb-manager-gui (1.0.0) resolute; urgency=medium
+
+  * Interface traduzida (gettext) em 33 idiomas, seguindo o idioma do Plasma,
+    também quando executado via pkexec.
+  * Progresso confiável em qualquer idioma: apt-get/dpkg rodam com mensagens
+    em C.UTF-8 e sem perguntas interativas (mantêm arquivos de configuração).
+  * Sem sudo quando já executado como root (pkexec).
+  * Empacotamento Debian completo (debhelper) e pipeline de CI com testes,
+    lintian e teste de instalação e remoção.
+
+ -- Charles Santana <charlesstna@proton.me>  Tue, 17 Nov 2026 10:50:31 -0300

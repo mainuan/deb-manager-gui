@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+export QT_QPA_PLATFORM = offscreen
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	po/i18n.sh compile debian/locale
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	python3 tests/test_i18n.py
+	python3 tests/test_worker.py
+endif
+
+override_dh_auto_install:
+	install -D -m 0755 deb-manager-gui debian/deb-manager-gui/usr/bin/deb-manager-gui
+	sed -i '1s|^#!.*|#!/usr/bin/python3|' debian/deb-manager-gui/usr/bin/deb-manager-gui
+	mkdir -p debian/deb-manager-gui/usr/share/locale
+	cp -r debian/locale/. debian/deb-manager-gui/usr/share/locale/
+
+override_dh_auto_clean:
+	rm -rf debian/locale build __pycache__ tests/__pycache__

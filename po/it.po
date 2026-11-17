@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deb-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/selrahcsan/deb-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-17 04:07-0300\n"
+"POT-Creation-Date: 2026-11-17 10:49-0300\n"
 "PO-Revision-Date: 2026-11-16 11:15-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: it <https://github.com/mainuan>\n"
@@ -17,107 +17,107 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: deb-manager-gui:122
+#: deb-manager-gui:161
 #, python-brace-format
 msgid "File not found: {path}"
 msgstr "File non trovato: {path}"
 
-#: deb-manager-gui:128
+#: deb-manager-gui:166
 #, python-brace-format
 msgid "Invalid mode: {mode}"
 msgstr "Modalità non valida: {mode}"
 
-#: deb-manager-gui:158
+#: deb-manager-gui:189
 #, python-brace-format
 msgid "Error fixing dependencies of {package}"
 msgstr "Errore durante la correzione delle dipendenze di {package}"
 
-#: deb-manager-gui:162
+#: deb-manager-gui:193
 #, python-brace-format
 msgid "Error processing: {package}"
 msgstr "Errore durante l'elaborazione: {package}"
 
-#: deb-manager-gui:180
+#: deb-manager-gui:211
 msgid "Installing Packages"
 msgstr "Installazione dei pacchetti"
 
-#: deb-manager-gui:182
+#: deb-manager-gui:213
 msgid "Removing Packages"
 msgstr "Rimozione dei pacchetti"
 
 # reviewed: 'Installazione di:' is ungrammatical before a colon
-#: deb-manager-gui:190
+#: deb-manager-gui:221
 #, python-brace-format
 msgid "Installing: {packages}"
 msgstr "Installazione in corso: {packages}"
 
 # reviewed: 'Rimozione di:' is ungrammatical before a colon
-#: deb-manager-gui:192
+#: deb-manager-gui:223
 #, python-brace-format
 msgid "Removing: {packages}"
 msgstr "Rimozione in corso: {packages}"
 
 #. Translators: {packages} is a comma-separated list of package names.
-#: deb-manager-gui:213
+#: deb-manager-gui:244
 #, python-brace-format
 msgid "{packages} installed successfully!"
 msgstr "{packages}: installazione completata correttamente."
 
 #. Translators: {packages} is a comma-separated list of package names.
-#: deb-manager-gui:216
+#: deb-manager-gui:247
 #, python-brace-format
 msgid "{packages} removed successfully!"
 msgstr "{packages}: rimozione completata correttamente."
 
 # from mainuan-grub-editor
-#: deb-manager-gui:217
+#: deb-manager-gui:248
 msgid "Success"
 msgstr "Successo"
 
 # from mainuan-grub-editor
-#: deb-manager-gui:219
+#: deb-manager-gui:250
 msgid "Error"
 msgstr "Errore"
 
-#: deb-manager-gui:219
+#: deb-manager-gui:250
 #, python-brace-format
 msgid "Failed: {message}"
 msgstr "Non riuscito: {message}"
 
 #. Translators: placeholder names shown in the command-line usage text,
 #. e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
-#: deb-manager-gui:227
+#: deb-manager-gui:258
 msgid "package1"
 msgstr "pacchetto1"
 
 #. Translators: see "package1".
-#: deb-manager-gui:229
+#: deb-manager-gui:260
 msgid "package2"
 msgstr "pacchetto2"
 
 #. Translators: see "package1"; ".deb" is appended by the program.
-#: deb-manager-gui:231
+#: deb-manager-gui:262
 msgid "file1"
 msgstr "file1"
 
 #. Translators: see "file1".
-#: deb-manager-gui:233
+#: deb-manager-gui:264
 msgid "file2"
 msgstr "file2"
 
 #. Translators: placeholder in the usage text "[--tx custom message]".
-#: deb-manager-gui:235
+#: deb-manager-gui:266
 msgid "custom message"
 msgstr "messaggio personalizzato"
 
-#: deb-manager-gui:236
+#: deb-manager-gui:267
 msgid "Usage:"
 msgstr "Uso:"
 
-#: deb-manager-gui:253
+#: deb-manager-gui:284
 msgid "Error: not enough arguments."
 msgstr "Errore: argomenti insufficienti."
 
-#: deb-manager-gui:266
+#: deb-manager-gui:297
 msgid "Invalid option!"
 msgstr "Opzione non valida."
