@@ -16,7 +16,6 @@ Package: deb-manager-gui
 Architecture: all
 Depends: ${misc:Depends},
          apt,
-         dpkg,
          python3,
          python3-pyqt6
 Recommends: pkexec,

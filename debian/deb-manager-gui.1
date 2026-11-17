@@ -1,0 +1,56 @@
+.TH DEB-MANAGER-GUI 1 "2026-11-17" "deb-manager-gui 1.0.0" "Mainuan"
+.SH NAME
+deb-manager-gui \- graphical progress window for APT package operations
+.SH SYNOPSIS
+.B deb-manager-gui
+.RB { \-\-in | \-\-rm }
+.I package
+.RI [ package ...]
+.RB [ \-\-tx
+.IR message ]
+.br
+.B deb-manager-gui \-\-deb
+.I file.deb
+.RI [ file.deb ...]
+.RB [ \-\-tx
+.IR message ]
+.SH DESCRIPTION
+.B deb-manager-gui
+installs or removes packages with
+.BR apt-get (8),
+or installs local files with
+.BR dpkg (1),
+while a Qt window shows the progress. A message box reports success or
+failure at the end.
+.PP
+It is meant to be started by other programs through
+.BR pkexec (1).
+When it is not running as root, the package tools are called through
+.BR sudo (8).
+The package tools run without interactive questions and keep existing
+configuration files.
+.SH OPTIONS
+.TP
+.B \-\-in
+Install the named packages from the configured APT repositories.
+.TP
+.B \-\-rm
+Remove the named packages.
+.TP
+.B \-\-deb
+Install local .deb files; missing dependencies are then resolved with
+.BR "apt-get \-f install" .
+.TP
+.BI \-\-tx " message"
+Text shown in the window instead of the package list. Everything after
+.B \-\-tx
+is part of the message.
+.SH ENVIRONMENT
+The interface follows
+.BR LANGUAGE " and " LANG .
+Under
+.BR pkexec (1),
+which clears the environment, the language of the calling user's Plasma
+session (~/.config/plasma-localerc) or /etc/default/locale is used.
+.SH EXAMPLE
+pkexec deb-manager-gui \-\-in vlc \-\-tx "Installing the media player"
