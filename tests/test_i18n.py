@@ -172,5 +172,59 @@ class I18nTest(unittest.TestCase):
         self.assertEqual(o["window_rtl"], [False])
 
 
+class CallerLanguageTest(unittest.TestCase):
+    """pkexec limpa o ambiente: o idioma vem do Plasma de quem chamou."""
+
+    @classmethod
+    def setUpClass(cls):
+        try:
+            import PyQt6.QtWidgets  # noqa: F401
+        except ImportError:
+            raise unittest.SkipTest("PyQt6 não disponível")
+        from importlib.machinery import SourceFileLoader
+        import importlib.util
+        loader = SourceFileLoader("dmg_language", SCRIPT)
+        spec = importlib.util.spec_from_loader("dmg_language", loader)
+        cls.dmg = importlib.util.module_from_spec(spec)
+        loader.exec_module(cls.dmg)
+
+    def run_with(self, environ, localerc=None, default_locale=None):
+        from unittest import mock
+        import types
+        home = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, home, True)
+        if localerc is not None:
+            os.makedirs(os.path.join(home, ".config"))
+            with open(os.path.join(home, ".config", "plasma-localerc"), "w", encoding="utf-8") as f:
+                f.write(localerc)
+        etc = os.path.join(home, "default-locale")
+        if default_locale is not None:
+            with open(etc, "w", encoding="utf-8") as f:
+                f.write(default_locale)
+        with mock.patch.object(self.dmg.pwd, "getpwuid", return_value=types.SimpleNamespace(pw_dir=home)):
+            self.dmg._inherit_caller_language(environ, etc)
+        return environ
+
+    def test_plasma_language_of_the_caller(self):
+        env = self.run_with({"PKEXEC_UID": "1000"},
+                            "[Formats]\nLANG=de_DE.UTF-8\n\n[Translations]\nLANGUAGE=de:en_US\n")
+        self.assertEqual(env["LANGUAGE"], "de:en_US")
+        self.assertEqual(env["LANG"], "de_DE.UTF-8")
+
+    def test_system_default_when_plasma_has_no_language(self):
+        env = self.run_with({"PKEXEC_UID": "1000"}, None, 'LANG="fr_FR.UTF-8"\n')
+        self.assertEqual(env, {"PKEXEC_UID": "1000", "LANG": "fr_FR.UTF-8"})
+
+    def test_existing_language_and_non_pkexec_runs_are_untouched(self):
+        rc = "[Translations]\nLANGUAGE=ja\n"
+        self.assertEqual(self.run_with({"PKEXEC_UID": "1000", "LANGUAGE": "pt_BR"}, rc),
+                         {"PKEXEC_UID": "1000", "LANGUAGE": "pt_BR"})
+        self.assertEqual(self.run_with({}, rc), {})
+
+    def test_unsafe_values_are_ignored(self):
+        env = self.run_with({"PKEXEC_UID": "1000"}, "[Translations]\nLANGUAGE=de; rm -rf /\n")
+        self.assertNotIn("LANGUAGE", env)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

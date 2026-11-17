@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: deb-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/selrahcsan/deb-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-16 12:39-0300\n"
+"POT-Creation-Date: 2026-11-17 04:07-0300\n"
 "PO-Revision-Date: 2026-11-16 11:15-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: bn <https://github.com/mainuan>\n"
@@ -16,103 +16,103 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: deb-manager-gui:70
+#: deb-manager-gui:122
 #, python-brace-format
 msgid "File not found: {path}"
 msgstr "ফাইল পাওয়া যায়নি: {path}"
 
-#: deb-manager-gui:76
+#: deb-manager-gui:128
 #, python-brace-format
 msgid "Invalid mode: {mode}"
 msgstr "অবৈধ মোড: {mode}"
 
-#: deb-manager-gui:106
+#: deb-manager-gui:158
 #, python-brace-format
 msgid "Error fixing dependencies of {package}"
 msgstr "{package}-এর নির্ভরতা ঠিক করতে ত্রুটি"
 
-#: deb-manager-gui:110
+#: deb-manager-gui:162
 #, python-brace-format
 msgid "Error processing: {package}"
 msgstr "প্রক্রিয়াকরণে ত্রুটি: {package}"
 
-#: deb-manager-gui:128
+#: deb-manager-gui:180
 msgid "Installing Packages"
 msgstr "প্যাকেজ ইনস্টল করা হচ্ছে"
 
-#: deb-manager-gui:130
+#: deb-manager-gui:182
 msgid "Removing Packages"
 msgstr "প্যাকেজ সরানো হচ্ছে"
 
-#: deb-manager-gui:138
+#: deb-manager-gui:190
 #, python-brace-format
 msgid "Installing: {packages}"
 msgstr "ইনস্টল করা হচ্ছে: {packages}"
 
-#: deb-manager-gui:140
+#: deb-manager-gui:192
 #, python-brace-format
 msgid "Removing: {packages}"
 msgstr "সরানো হচ্ছে: {packages}"
 
 #. Translators: {packages} is a comma-separated list of package names.
-#: deb-manager-gui:161
+#: deb-manager-gui:213
 #, python-brace-format
 msgid "{packages} installed successfully!"
 msgstr "{packages} সফলভাবে ইনস্টল করা হয়েছে!"
 
 #. Translators: {packages} is a comma-separated list of package names.
-#: deb-manager-gui:164
+#: deb-manager-gui:216
 #, python-brace-format
 msgid "{packages} removed successfully!"
 msgstr "{packages} সফলভাবে সরানো হয়েছে!"
 
-#: deb-manager-gui:165
+#: deb-manager-gui:217
 msgid "Success"
 msgstr "সফল"
 
-#: deb-manager-gui:167
+#: deb-manager-gui:219
 msgid "Error"
 msgstr "ত্রুটি"
 
-#: deb-manager-gui:167
+#: deb-manager-gui:219
 #, python-brace-format
 msgid "Failed: {message}"
 msgstr "ব্যর্থ: {message}"
 
 #. Translators: placeholder names shown in the command-line usage text,
 #. e.g. "--in <package1> [package2 ...]". Keep them short, no spaces.
-#: deb-manager-gui:175
+#: deb-manager-gui:227
 msgid "package1"
 msgstr "প্যাকেজ১"
 
 #. Translators: see "package1".
-#: deb-manager-gui:177
+#: deb-manager-gui:229
 msgid "package2"
 msgstr "প্যাকেজ২"
 
 #. Translators: see "package1"; ".deb" is appended by the program.
-#: deb-manager-gui:179
+#: deb-manager-gui:231
 msgid "file1"
 msgstr "ফাইল১"
 
 #. Translators: see "file1".
-#: deb-manager-gui:181
+#: deb-manager-gui:233
 msgid "file2"
 msgstr "ফাইল২"
 
 #. Translators: placeholder in the usage text "[--tx custom message]".
-#: deb-manager-gui:183
+#: deb-manager-gui:235
 msgid "custom message"
 msgstr "নিজস্ব বার্তা"
 
-#: deb-manager-gui:184
+#: deb-manager-gui:236
 msgid "Usage:"
 msgstr "ব্যবহার:"
 
-#: deb-manager-gui:201
+#: deb-manager-gui:253
 msgid "Error: not enough arguments."
 msgstr "ত্রুটি: পর্যাপ্ত আর্গুমেন্ট নেই।"
 
-#: deb-manager-gui:214
+#: deb-manager-gui:266
 msgid "Invalid option!"
 msgstr "অবৈধ বিকল্প!"

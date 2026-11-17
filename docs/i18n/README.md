@@ -52,8 +52,11 @@ repositório.
   com o apt em outro idioma o progresso avança apenas por pacote (comportamento
   anterior mantido).
 * O texto de `--tx` é fornecido por quem chama o programa e é exibido como veio.
-* O programa costuma rodar via `pkexec`, que limpa o ambiente: quem o chama deve
-  repassar `LANGUAGE`/`LANG` (ex.: `pkexec env DISPLAY=… LANGUAGE="$LANGUAGE"
-  LANG="$LANG" deb-manager-gui …`), senão a interface aparece em inglês.
+* O programa costuma rodar via `pkexec`, que limpa o ambiente. Se nenhuma
+  variável de idioma chegar e `PKEXEC_UID` estiver definido, ele usa o idioma que
+  o usuário que o chamou escolheu no Plasma (`~/.config/plasma-localerc`,
+  `[Translations] LANGUAGE` e `[Formats] LANG`) e, na falta dele,
+  `/etc/default/locale`. Repassar `LANGUAGE`/`LANG` explicitamente continua
+  tendo prioridade.
 * `po/i18n.sh` local usa uma única tag `--add-comments` (`Translators:`): o
   xgettext só respeita a última tag passada.

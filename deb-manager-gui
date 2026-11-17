@@ -3,6 +3,9 @@
 import sys
 import subprocess
 import gettext
+import configparser
+import pwd
+import re
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QLabel, QProgressBar, QMessageBox
 )
@@ -15,6 +18,55 @@ import os
 # em /usr/share/locale; para rodar a partir do código-fonte, defina
 # DEB_MANAGER_GUI_LOCALEDIR ou compile em ./build/locale (po/i18n.sh compile).
 TEXTDOMAIN = "deb-manager-gui"
+
+_LANGUAGE_VARIABLES = ("LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG")
+_SAFE_LOCALE_VALUE = re.compile(r"[A-Za-z0-9_.@:-]{1,128}")
+
+
+def _read_ini_value(path, section, key):
+    parser = configparser.ConfigParser(strict=False, interpolation=None)
+    parser.optionxform = str
+    try:
+        parser.read(path, encoding="utf-8")
+        value = parser.get(section, key, fallback="").strip()
+    except (configparser.Error, OSError, UnicodeDecodeError):
+        return ""
+    return value if _SAFE_LOCALE_VALUE.fullmatch(value) else ""
+
+
+def _inherit_caller_language(environ=os.environ, etc_default_locale="/etc/default/locale"):
+    """pkexec clears the environment, so a program started as
+    'pkexec deb-manager-gui …' would always show English. When no language
+    variable survived, use the language the calling user chose in Plasma
+    (~/.config/plasma-localerc), then the system default locale."""
+    if "PKEXEC_UID" not in environ or any(environ.get(name) for name in _LANGUAGE_VARIABLES):
+        return
+    try:
+        home = pwd.getpwuid(int(environ["PKEXEC_UID"])).pw_dir
+    except (KeyError, ValueError):
+        home = ""
+    if home:
+        localerc = os.path.join(home, ".config", "plasma-localerc")
+        language = _read_ini_value(localerc, "Translations", "LANGUAGE")
+        lang = _read_ini_value(localerc, "Formats", "LANG")
+        if language:
+            environ["LANGUAGE"] = language
+        if lang:
+            environ["LANG"] = lang
+        if language or lang:
+            return
+    try:
+        with open(etc_default_locale, encoding="utf-8") as handle:
+            for line in handle:
+                name, _sep, value = line.strip().partition("=")
+                value = value.strip().strip('"')
+                if name in ("LANG", "LANGUAGE") and _SAFE_LOCALE_VALUE.fullmatch(value):
+                    environ[name] = value
+    except (OSError, UnicodeDecodeError):
+        pass
+
+
+_inherit_caller_language()
 
 
 def _find_localedir():
