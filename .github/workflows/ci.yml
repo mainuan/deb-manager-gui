@@ -18,7 +18,7 @@ jobs:
   package:
     permissions:
       contents: write # only the release job uses it, and only for v* tags
-    uses: mainuan/.github/.github/workflows/debian-package.yml@db5917eef294e2916f45339df89d27fadaecd5f2
+    uses: mainuan/.github/.github/workflows/debian-package.yml@054472e59959e017c5c7afffe802b5e8f40a8288
     with:
       package: deb-manager-gui
       release-title: deb-manager-gui
