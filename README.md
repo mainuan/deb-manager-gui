@@ -16,6 +16,9 @@ Janela de progresso em Qt 6 para instalar ou remover pacotes APT e arquivos `.de
 
 ---
 
+<p align="center"><img src="docs/screenshots/deb-manager-gui.png" width="480" alt="deb-manager-gui ao concluir a instalação de um pacote"></p>
+
+
 ## O que é
 
 O `deb-manager-gui` é um script Python com PyQt6 que executa operações de

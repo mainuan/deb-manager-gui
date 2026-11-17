@@ -16,6 +16,9 @@ Qt 6 progress window that installs or removes APT packages and `.deb` files on b
 
 ---
 
+<p align="center"><img src="docs/screenshots/deb-manager-gui.png" width="480" alt="deb-manager-gui after installing a package"></p>
+
+
 ## About
 
 `deb-manager-gui` is a Python/PyQt6 script that runs package operations given
